@@ -184,3 +184,13 @@ code{background:var(--arena);padding:1px 6px}
  .acc-nav a.active{border:0;font-weight:500}
 }
 @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+
+/* ---- Fotos completas, sin recortes ---- */
+.hero{height:auto;min-height:0;background:var(--arena)}
+.hero figure{height:min(78vh,760px)}
+.hero img{object-fit:contain;object-position:center}
+.hero-cap{position:static;grid-column:1/-1;background:var(--hueso);color:var(--carbon);padding:36px 20px 44px}
+.hero-cap .btn.light{border-color:var(--carbon);color:var(--carbon)}
+.hero-cap .btn.light:hover{background:var(--carbon);color:var(--hueso)}
+.cat-ph img{object-fit:contain}
+.split img{object-fit:contain;background:var(--arena)}
