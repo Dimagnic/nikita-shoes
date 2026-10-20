@@ -66,7 +66,7 @@ export default function Footer() {
 
         <div className="f-bar">
           <span>© {new Date().getFullYear()} {BIZ.brand}. Todos los derechos reservados.</span>
-          <span className="f-by">Diseñado por <span className="f-logo"><img src="/img/cero-mas.png" alt="Cero+" /></span></span>
+          <span className="f-by">Diseñado por <a className="f-logo" href="https://cero-new-generation-e19z.vercel.app/" target="_blank" rel="noopener noreferrer" aria-label="Cero+ (abre su sitio en una pestaña nueva)"><img src="/img/cero-mas.png" alt="Cero+" /></a></span>
         </div>
       </div>
     </footer>

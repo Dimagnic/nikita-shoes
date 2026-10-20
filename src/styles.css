@@ -237,3 +237,10 @@ code{background:var(--soft);padding:1px 6px}
 /* Los botones flotantes no deben tapar la barra inferior del pie */
 .f-bar{padding-right:84px}
 @media(min-width:700px){.f-bar{padding-left:60px;padding-right:100px}}
+
+/* Solo la pastilla del logo es un enlace */
+a.f-logo{transition:transform .2s,box-shadow .2s}
+a.f-logo:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.35)}
+/* Mientras el aviso de cookies está visible, el pie deja espacio para que no tape nada */
+.foot{padding-bottom:calc(24px + var(--cookie-space,0px) + env(safe-area-inset-bottom,0px))}
+@media(max-width:699px){.foot{padding-bottom:calc(84px + var(--cookie-space,0px) + env(safe-area-inset-bottom,0px))}}
