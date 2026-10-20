@@ -5,6 +5,7 @@ import Footer from './components/Footer'
 import AuthModal from './components/AuthModal'
 import CartDrawer from './components/CartDrawer'
 import CookieBanner from './components/CookieBanner'
+import FloatingActions from './components/FloatingActions'
 import { RequireAdmin, RequireAuth } from './components/Guards'
 import Home from './pages/Home'
 import Shop from './pages/Shop'
@@ -54,6 +55,7 @@ export default function App() {
       <CartDrawer />
       <AuthModal />
       <CookieBanner />
+      <FloatingActions />
       <ScrollTop />
     </>
   )
