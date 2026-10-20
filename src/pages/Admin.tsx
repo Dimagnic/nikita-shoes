@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { Link, NavLink, Outlet, useNavigate, useParams } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { dateMx, money, slugify } from '../lib/format'
+import { processImage } from '../lib/images'
+import Img from '../components/Img'
 import { useTitle } from '../lib/useTitle'
 import { CATEGORIES, STATUS_LABEL, type Order, type Product } from '../types'
 
@@ -41,7 +43,7 @@ export function AdminProducts() {
       <div className="stack">
         {list?.map((p) => (
           <article className="panel prow" key={p.id}>
-            <img src={p.images[0] ?? '/img/logo.png'} alt="" />
+            <Img md src={p.images[0] ?? '/img/logo.png'} alt="" />
             <div>
               <strong>{p.name}</strong>
               <div className="muted small">{money(p.price_cents)} · {p.category} · {(p.product_variants ?? []).reduce((a, v) => a + v.stock, 0)} pares en total</div>
@@ -103,11 +105,19 @@ export function AdminProductForm() {
     setBusy(true); setMsg('')
     const urls: string[] = []
     for (const file of Array.from(files)) {
-      if (!file.type.startsWith('image/') || file.size > 6 * 1024 * 1024) { setMsg('Solo imágenes de hasta 6 MB.'); continue }
-      const path = `${crypto.randomUUID()}.${file.name.split('.').pop()?.toLowerCase() ?? 'jpg'}`
-      const { error } = await supabase.storage.from('products').upload(path, file, { cacheControl: '31536000', upsert: false })
-      if (error) { setMsg('No se pudo subir una imagen: ' + error.message); continue }
-      urls.push(supabase.storage.from('products').getPublicUrl(path).data.publicUrl)
+      if (!file.type.startsWith('image/') || file.size > 25 * 1024 * 1024) { setMsg('Solo imágenes JPG, PNG o WebP de hasta 25 MB.'); continue }
+      try {
+        // Se optimiza antes de subir: nítida (hasta 2400 px), WebP y una versión mediana para tarjetas.
+        const { full, md, ext } = await processImage(file)
+        const id = crypto.randomUUID()
+        const up = (name: string, blob: Blob) =>
+          supabase.storage.from('products').upload(name, blob, { cacheControl: '31536000', contentType: blob.type, upsert: false })
+        const [a, b] = await Promise.all([up(`${id}.${ext}`, full), up(`${id}_md.${ext}`, md)])
+        if (a.error || b.error) { setMsg('No se pudo subir una imagen: ' + (a.error?.message ?? b.error?.message)); continue }
+        urls.push(supabase.storage.from('products').getPublicUrl(`${id}.${ext}`).data.publicUrl)
+      } catch {
+        setMsg('No se pudo procesar una imagen. Prueba con otro archivo JPG, PNG o WebP.')
+      }
     }
     setImages((cur) => [...cur, ...urls]); setBusy(false)
   }
@@ -149,10 +159,10 @@ export function AdminProductForm() {
       <h2>{isNew ? 'Producto nuevo' : 'Editar producto'}</h2>
 
       <fieldset><legend>Fotos</legend>
-        <p className="muted small">La primera foto es la principal. Usa fondo claro y buena luz.</p>
+        <p className="muted small">La primera foto es la principal. Sube originales de al menos 2000 px por el lado largo, con fondo blanco o gris claro y la misma luz en todos los productos. La tienda las optimiza sola.</p>
         <div className="img-grid">
           {images.map((u, i) => (
-            <div key={u} className="img-item"><img src={u} alt="" />
+            <div key={u} className="img-item"><Img md src={u} alt="" />
               <div className="btn-row">
                 <button type="button" aria-label="Mover a la izquierda" onClick={() => move(i, -1)}>←</button>
                 <button type="button" aria-label="Mover a la derecha" onClick={() => move(i, 1)}>→</button>

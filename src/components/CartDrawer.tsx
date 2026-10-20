@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext'
 import { BIZ } from '../config/business'
 import { money } from '../lib/format'
 import { CloseIcon } from './Icons'
+import Img from './Img'
 
 export default function CartDrawer() {
   const { lines, subtotal, open, setOpen, setQty, remove } = useCart()
@@ -48,7 +49,7 @@ export default function CartDrawer() {
           )}
           {lines.map((l) => (
             <div className="cart-line" key={l.variantId}>
-              <img src={l.image ?? '/img/logo.png'} alt="" />
+              <Img md src={l.image ?? '/img/logo.png'} alt="" />
               <div>
                 <Link to={`/producto/${l.slug}`} onClick={() => setOpen(false)}>{l.name}</Link>
                 <div className="muted">Talla {l.size} · {money(l.price_cents)}</div>
