@@ -233,3 +233,7 @@ code{background:var(--soft);padding:1px 6px}
  .fcols{grid-template-columns:1.25fr 1fr 1fr 1.15fr 1fr;gap:40px}.fcols>.f-brand{grid-column:auto}
 }
 @media(max-width:699px){.foot{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}}
+
+/* Los botones flotantes no deben tapar la barra inferior del pie */
+.f-bar{padding-right:84px}
+@media(min-width:700px){.f-bar{padding-left:60px;padding-right:100px}}
